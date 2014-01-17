@@ -1,0 +1,114 @@
+;;
+;; list-sources.el for list-get-sources in /home/mota/projets/tek2/my_script
+;;
+;; Made by pierre wacrenier
+;; Login   <wacren_p@epitech.net>
+;;
+;; Started on  Wed Jun 16 14:44:07 2010 pierre wacrenier
+;; Last update Mon Sep  6 17:05:04 2010 pierre wacrenier
+;;
+
+;; NAME
+;; 	list-get-sources
+;;
+;; SYNOPSIS
+;; 	(list-get-sources ())
+;;
+;; DESCRIPTION
+;; 	The list-get-sources functions prompt you the source directory and
+;;	tries to list sources files who match ``file-pattern'' within this
+;;	directory (relative to Makefile's one), and insert it into
+;; 	the Makefile following this format:
+;;
+;; 	SRCVARNAME	=	$(SRCDIRVARNAME)source1.ext	\
+;; 				$(SRCDIRVARNAME)source2.ext
+;;
+;; 	The last source file is not followed by a backslash.
+;;
+;;	You can configure the script in you .emacs(.el) by defining new values
+;;	to theses variables (setq var value):
+;;
+;;	-srcs-var:	the Makefile's SRC variable name to be assigned
+;;	-srcdir-name:	default SRCDIR value
+;;	-srcdir-var:	the Makefile's SRCDIR variable name
+;;	-file-pattern:	file extensions to list, follows the glob pattern syntax
+;;			used by the ``-name'' find primary
+;;	-replace-var	boolean, use srcdir-var for replacement of srcdir-name in 
+;;			Makefile.
+;;
+;;	Don't forget to put ``(require 'list-sources)'' in you .emacs(.el)
+;;
+;; EXAMPLES
+;; 	emacs ~/projects/tek2/zappy
+;;
+;; 	Then under emacs:
+;; 	M-x list-get-sources (or C-x C-; by default)
+;;
+;; 	SRCS		=	$(SRCDIR)main.c		\
+;; 				$(SRCDIR)daemon.c	\
+;; 				$(SRCDIR)log.c
+;;
+;; AUTHOR
+;; 	Pierre ``Mota'' Wacrenier (wacren_p) wrote this script. For any question
+;; 	or suggestion send me a mail to: wacren_p@epitech.net.
+;; 	If you're happy with this script, you can offer me a beer.
+
+(defvar srcs-var "SRCS")
+(defvar srcdir-name "src")
+(defvar srcdir-var "SRCDIR")
+(defvar file-pattern "*.cpp")
+(defvar replace-var t)
+
+(defun list-get-sources ()
+  "Insert a list of C/Objective-C/C++/C#/Caml sources files (by default) in a Makefile."
+  (interactive)
+  (save-excursion
+    (let ((proj-path) (buf (get-buffer-create "*tmp*")))
+      (setq cur-buf (current-buffer))
+      (setq proj-path (file-name-directory (buffer-file-name)))
+      (setq srcdir-name
+      	    (read-from-minibuffer
+      	     (format "value of $(SRCDIR) (default: %s): " srcdir-name)
+      	     srcdir-name)
+      	    )
+      (if (string= "." srcdir-name)
+	  (setq srcdir-name proj-path)
+	  )
+      (setq cmd
+      	    (format
+      	     "cd %s && find %s -name \"%s\" | sort -d"
+      	     proj-path srcdir-name file-pattern)
+      	    )
+      (if replace-var
+      	  (setq cmd (concat cmd (format " | sed 's/%s/\$(%s)/g'" srcdir-name srcdir-var)))
+      	)
+      (call-process-shell-command cmd nil buf)
+      (set-buffer buf)
+      (goto-char (point-min))
+      (newline)
+      (insert (format "%s		=" srcs-var))
+      (let ((i 0))
+	(while (< (point) (point-max))
+	  (cond ((> i 0)
+		 (tab-to-tab-stop)
+		 (tab-to-tab-stop)
+		 )
+		)
+	  (tab-to-tab-stop)
+	  (forward-line 1)
+	  (setq i (+ i 1))
+	  )
+	)
+      (makefile-backslash-region (point-min) (point-max) nil)
+      (goto-char (point-min))
+      (set-buffer cur-buf)
+      (insert-buffer-substring buf)
+      (kill-buffer buf)
+      )
+    )
+  )
+
+;;Default shortcut
+(global-set-key (kbd "C-x C-m") 'list-get-sources)
+
+(provide 'list-sources)

@@ -1,0 +1,49 @@
+(require 'package)
+(dolist (source '(("marmalade" . "http://marmalade-repo.org/packages/")
+                  ("elpa" . "http://tromey.com/elpa/")
+                  ;; TODO: Maybe, use this after emacs24 is released
+                  ;; (development versions of packages)
+                  ("melpa" . "http://melpa.milkbox.net/packages/")
+                  ))
+  (add-to-list 'package-archives source t))
+(package-initialize)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ecb-options-version "2.40"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+(add-to-list 'load-path "~/.emacs.d")
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+(ac-config-default)
+
+(highlight-changes-visible-mode)
+;;(highlight-80+-mode)
+;;(ecb-activate)
+
+(require 'ecb)
+(require 'ecb-autoloads)
+;;(setq ecb-layout-name "layout-name")
+(setq ecb-show-sources-in-directories-buffer 'always)
+(setq ecb-compile-window-height 12)
+(setq ecb-compile-window-width 12)
+;;; activate and deactivate ecb
+(global-set-key (kbd "C-x C-;") 'ecb-activate)
+(global-set-key (kbd "C-x C-'") 'ecb-deactivate)
+;;; show/hide ecb window
+(global-set-key (kbd "C-;") 'ecb-show-ecb-windows)
+(global-set-key (kbd "C-'") 'ecb-hide-ecb-windows)
+;;; quick navigation between ecb windows
+(global-set-key (kbd "C-)") 'ecb-goto-window-edit1)
+(global-set-key (kbd "C-!") 'ecb-goto-window-directories)
+(global-set-key (kbd "C-@") 'ecb-goto-window-sources)
+(global-set-key (kbd "C-#") 'ecb-goto-window-methods)
+(global-set-key (kbd "C-$") 'ecb-goto-window-compilation)

@@ -1,0 +1,51 @@
+;; Object remi/
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "remi/"
+  :tables (list 
+   (semanticdb-table "translations.c"
+    :major-mode 'c-mode
+    :tags 
+        '( ("my.h" include nil nil [251 266])
+            ("trans_plans" function
+               (:arguments 
+                  ( ("ap" variable
+                       (:pointer 1
+                        :type ("t_image" type (:type "class") nil nil))
+                        (reparse-symbol arg-sub-list) [285 297]))                  
+                :type "int")
+                nil [268 341])
+            ("trans_sphere" function
+               (:arguments 
+                  ( ("ap" variable
+                       (:pointer 1
+                        :type ("t_image" type (:type "class") nil nil))
+                        (reparse-symbol arg-sub-list) [361 373]))                  
+                :type "int")
+                nil [343 472])
+            ("trans_cyl" function
+               (:arguments 
+                  ( ("ap" variable
+                       (:pointer 1
+                        :type ("t_image" type (:type "class") nil nil))
+                        (reparse-symbol arg-sub-list) [489 501]))                  
+                :type "int")
+                nil [474 579])
+            ("trans_cone" function
+               (:arguments 
+                  ( ("ap" variable
+                       (:pointer 1
+                        :type ("t_image" type (:type "class") nil nil))
+                        (reparse-symbol arg-sub-list) [597 609]))                  
+                :type "int")
+                nil [581 723]))          
+    :file "translations.c"
+    :pointmax 724
+    :fsize 723
+    :lastmodtime '(21020 49992)
+    :unmatched-syntax 'nil
+    )
+   )
+  :file "!home!remi!semantic.cache"
+  :semantic-tag-version "2.0"
+  :semanticdb-version "2.0"
+  )
